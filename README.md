@@ -9,7 +9,7 @@ browser tests, both running in GitHub Actions.
 
 ## Live demo
 
-**https://applylog-v0lm.onrender.com/**
+**[https://applylog-v0lm.onrender.com/](https://applylog-or59.onrender.com/)**
 
 Hosted on Render's free tier, so the first request after a quiet period takes 30 to 60
 seconds while the service wakes up. The database is Neon, which suspends after five
