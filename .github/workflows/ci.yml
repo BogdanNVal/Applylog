@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  APPLYLOG_TEST_DATABASE_URL: postgresql://applylog:devpass@127.0.0.1:5433/applylog_test
+  APPLYLOG_E2E_DATABASE_URL: postgresql://applylog:devpass@127.0.0.1:5433/applylog_e2e
+
+jobs:
+  api-tests:
+    name: API tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: applylog
+          POSTGRES_PASSWORD: devpass
+          POSTGRES_DB: applylog
+        ports:
+          # Matches the default DSN, so the tests need no extra configuration.
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U applylog"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Run tests
+        run: pytest
+
+  browser-tests:
+    name: Browser tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg17
+        env:
+          POSTGRES_USER: applylog
+          POSTGRES_PASSWORD: devpass
+          POSTGRES_DB: applylog
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U applylog"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Install Chromium
+        run: playwright install --with-deps chromium
+
+      - name: Run browser tests
+        run: pytest tests_e2e
+
+      - name: Upload failure traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: test-results/

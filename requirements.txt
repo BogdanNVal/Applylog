@@ -1,0 +1,10 @@
+fastapi>=0.115
+uvicorn>=0.30
+itsdangerous>=2.2
+pydantic>=2.9
+email-validator>=2.2
+# The binary wheel bundles libpq on Linux, which is what CI and Render use.
+# Windows machines with Smart App Control block that DLL; psycopg then falls
+# back to its pure-Python implementation against an installed libpq.
+psycopg[binary]>=3.2
+psycopg-pool>=3.2

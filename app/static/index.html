@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ApplyLog - job application tracker</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>&#128203;</text></svg>" />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <!-- Signed-out view -->
+    <main id="auth-view" class="auth-view" hidden>
+      <section class="auth-card">
+        <h1 class="brand">ApplyLog</h1>
+        <p class="tagline">Track every application, status and reply in one place.</p>
+
+        <div class="tabs" role="tablist">
+          <button id="tab-login" class="tab is-active" role="tab" type="button">Sign in</button>
+          <button id="tab-register" class="tab" role="tab" type="button">Create account</button>
+        </div>
+
+        <form id="auth-form" novalidate>
+          <label for="auth-email">Email</label>
+          <input id="auth-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+
+          <label for="auth-password">Password</label>
+          <input id="auth-password" name="password" type="password" autocomplete="current-password" required minlength="8" placeholder="At least 8 characters" />
+
+          <p id="auth-error" class="error" role="alert" hidden></p>
+          <button id="auth-submit" class="btn btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+
+        <p class="hint">Data stays in your own SQLite database. Passwords are hashed with PBKDF2.</p>
+      </section>
+    </main>
+
+    <!-- Signed-in view -->
+    <div id="app-view" hidden>
+      <header class="topbar">
+        <div class="topbar-inner">
+          <span class="brand brand-sm">ApplyLog</span>
+          <div class="topbar-right">
+            <span id="user-email" class="user-email"></span>
+            <button id="logout-btn" class="btn btn-ghost" type="button">Sign out</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="container">
+        <section class="stats" id="stats" aria-label="Summary">
+          <article class="stat"><span class="stat-label">Applications</span><strong id="stat-total" class="stat-value">0</strong></article>
+          <article class="stat"><span class="stat-label">Waiting</span><strong id="stat-applied" class="stat-value">0</strong></article>
+          <article class="stat"><span class="stat-label">Interviews</span><strong id="stat-interview" class="stat-value">0</strong></article>
+          <article class="stat"><span class="stat-label">Offers</span><strong id="stat-offer" class="stat-value">0</strong></article>
+          <article class="stat" title="Share of applications that got any reply, including rejections"><span class="stat-label">Response rate</span><strong id="stat-response" class="stat-value">0%</strong></article>
+          <article class="stat"><span class="stat-label">Last 7 days</span><strong id="stat-week" class="stat-value">0</strong></article>
+        </section>
+
+        <section class="toolbar" aria-label="Filters">
+          <input id="filter-q" class="grow" type="search" placeholder="Search company, role, notes..." aria-label="Search" />
+          <select id="filter-status" aria-label="Filter by status">
+            <option value="">All statuses</option>
+            <option value="applied">Applied</option>
+            <option value="interview">Interview</option>
+            <option value="offer">Offer</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <label class="date-field">From <input id="filter-from" type="date" aria-label="Applied from" /></label>
+          <label class="date-field">To <input id="filter-to" type="date" aria-label="Applied to" /></label>
+          <button id="clear-filters" class="btn btn-ghost" type="button">Clear</button>
+          <span class="spacer"></span>
+          <button id="export-btn" class="btn btn-ghost" type="button">Export CSV</button>
+          <button id="new-btn" class="btn btn-primary" type="button">Add application</button>
+        </section>
+
+        <section class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Applied</th>
+                <th>Status</th>
+                <th class="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+          <p id="empty-state" class="empty" hidden></p>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="app-dialog" class="dialog">
+      <form id="app-form" method="dialog" novalidate>
+        <h2 id="dialog-title">Add application</h2>
+
+        <div class="grid-2">
+          <div>
+            <label for="f-company">Company *</label>
+            <input id="f-company" name="company" required maxlength="120" />
+          </div>
+          <div>
+            <label for="f-role">Role *</label>
+            <input id="f-role" name="role" required maxlength="120" />
+          </div>
+          <div>
+            <label for="f-applied-on">Applied on *</label>
+            <input id="f-applied-on" name="applied_on" type="date" required />
+          </div>
+          <div>
+            <label for="f-status">Status</label>
+            <select id="f-status" name="status">
+              <option value="applied">Applied</option>
+              <option value="interview">Interview</option>
+              <option value="offer">Offer</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div>
+            <label for="f-location">Location</label>
+            <input id="f-location" name="location" maxlength="120" placeholder="Remote / Berlin" />
+          </div>
+          <div>
+            <label for="f-link">Job link</label>
+            <input id="f-link" name="link" type="url" maxlength="500" placeholder="https://..." />
+          </div>
+        </div>
+
+        <label for="f-notes">Notes</label>
+        <textarea id="f-notes" name="notes" rows="3" maxlength="2000" placeholder="Recruiter name, salary range, next step..."></textarea>
+
+        <p id="form-error" class="error" role="alert" hidden></p>
+
+        <div class="dialog-actions">
+          <button id="cancel-btn" class="btn btn-ghost" type="button">Cancel</button>
+          <button id="save-btn" class="btn btn-primary" type="submit">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

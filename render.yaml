@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: applylog
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: APPLYLOG_SECRET_KEY
+        generateValue: true
+      - key: APPLYLOG_HTTPS_ONLY
+        value: "1"
+      # Set in the Render dashboard to the pooled Neon connection string.
+      # The database lives outside Render, so the free plan needs no disk and
+      # the data survives redeploys, restarts and idle spin-downs.
+      - key: APPLYLOG_DATABASE_URL
+        sync: false
