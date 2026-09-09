@@ -11,8 +11,7 @@ services:
         generateValue: true
       - key: APPLYLOG_HTTPS_ONLY
         value: "1"
-      # Set in the Render dashboard to the pooled Neon connection string.
-      # The database lives outside Render, so the free plan needs no disk and
-      # the data survives redeploys, restarts and idle spin-downs.
+      # Set this in the Render dashboard to Neon's pooled URL.
+      # DB lives off Render so a free instance doesn't need a disk.
       - key: APPLYLOG_DATABASE_URL
         sync: false

@@ -1,7 +1,4 @@
-# Local Postgres for development and tests.
-#   docker compose up -d
-# The pgvector image is the same one CI uses, so semantic search later needs no
-# change here.
+# Local Postgres. docker compose up -d
 services:
   db:
     image: pgvector/pgvector:pg17
@@ -11,7 +8,7 @@ services:
       POSTGRES_PASSWORD: devpass
       POSTGRES_DB: applylog
     ports:
-      # 5433 on the host, so it never fights a locally installed Postgres.
+      # 5433 so it doesn't collide with a Postgres already on 5432.
       - "5433:5432"
     volumes:
       - applylog-pgdata:/var/lib/postgresql/data

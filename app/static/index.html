@@ -10,11 +10,10 @@
   <body>
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
-    <!-- Signed-out view -->
     <main id="auth-view" class="auth-view" hidden>
       <section class="auth-card">
         <h1 class="brand">ApplyLog</h1>
-        <p class="tagline">Track every application, status and reply in one place.</p>
+        <p class="tagline">A list of the jobs you've applied to, plus what happened after.</p>
 
         <div class="tabs" role="tablist">
           <button id="tab-login" class="tab is-active" role="tab" type="button">Sign in</button>
@@ -32,11 +31,10 @@
           <button id="auth-submit" class="btn btn-primary btn-block" type="submit">Sign in</button>
         </form>
 
-        <p class="hint">Data stays in your own SQLite database. Passwords are hashed with PBKDF2.</p>
+        <p class="hint">Stored in Postgres. Passwords are hashed, not stored in the clear.</p>
       </section>
     </main>
 
-    <!-- Signed-in view -->
     <div id="app-view" hidden>
       <header class="topbar">
         <div class="topbar-inner">

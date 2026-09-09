@@ -1,5 +1,3 @@
-"""Application CRUD, filters, stats, CSV export."""
-
 import csv
 import io
 from datetime import date, datetime, timedelta, timezone
@@ -45,7 +43,7 @@ def _query_applications(
         params.append(status_filter)
 
     if search:
-        # ILIKE: Postgres LIKE is case-sensitive.
+        # LIKE is case-sensitive on Postgres; ILIKE isn't.
         sql += (
             " AND (company ILIKE %s ESCAPE '\\' OR role ILIKE %s ESCAPE '\\'"
             " OR location ILIKE %s ESCAPE '\\' OR notes ILIKE %s ESCAPE '\\')"
@@ -180,7 +178,7 @@ def get_application(app_id: int, user: CurrentUser, conn: Conn) -> dict[str, Any
 def update_application(
     app_id: int, payload: ApplicationIn, user: CurrentUser, conn: Conn
 ) -> dict[str, Any]:
-    # Owner check + update in one statement.
+    # WHERE user_id = ... so we don't update someone else's row.
     row = conn.execute(
         "UPDATE applications SET company = %s, role = %s, link = %s, location = %s,"
         " notes = %s, status = %s, applied_on = %s, updated_at = %s"

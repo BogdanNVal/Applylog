@@ -1,10 +1,8 @@
-"""Fill an existing account with sample applications, for demos and screenshots.
+"""Dump a handful of fake applications into an existing account.
 
-Usage:
     python scripts/seed_demo.py --email you@example.com [--reset]
 
-Create the account through the sign-up form first; this script never handles
-passwords.
+Sign up in the app first — this script doesn't touch passwords.
 """
 
 import argparse
@@ -81,7 +79,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--email", required=True, help="Email of an existing account")
     parser.add_argument(
-        "--reset", action="store_true", help="Delete existing applications first"
+        "--reset", action="store_true", help="Wipe this account's applications first"
     )
     args = parser.parse_args()
     seed(args.email, args.reset)

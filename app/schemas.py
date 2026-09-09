@@ -1,5 +1,3 @@
-"""Request and response models."""
-
 from datetime import date
 from typing import Literal
 

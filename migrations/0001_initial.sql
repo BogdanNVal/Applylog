@@ -5,9 +5,8 @@ CREATE TABLE IF NOT EXISTS users (
     created_at    text NOT NULL
 );
 
--- SQLite got case-insensitive uniqueness from COLLATE NOCASE. Postgres has no
--- such collation on a plain column, so uniqueness is enforced on lower(email)
--- and every lookup goes through lower(email) to use this index.
+-- Emails should match case-insensitively. SQLite had COLLATE NOCASE; Postgres
+-- doesn't, so unique on lower(email) and always look up that way.
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_lower ON users (lower(email));
 
 CREATE TABLE IF NOT EXISTS applications (

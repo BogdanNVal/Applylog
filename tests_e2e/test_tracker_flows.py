@@ -1,5 +1,3 @@
-"""Browser e2e flows."""
-
 import csv
 import io
 
@@ -9,7 +7,7 @@ from playwright.sync_api import Page, expect
 def add_application(page: Page, company: str, role: str, status: str = "applied", **fields):
     page.get_by_role("button", name="Add application").click()
 
-    # Scope to dialog — "Status" also matches the filter behind it.
+    # Stay inside the dialog — "Status" also matches the filter dropdown.
     dialog = page.locator("#app-dialog")
     dialog.get_by_label("Company *").fill(company)
     dialog.get_by_label("Role *").fill(role)

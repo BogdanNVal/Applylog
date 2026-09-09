@@ -19,7 +19,7 @@
   box-sizing: border-box;
 }
 
-/* Beat class selectors that would otherwise override [hidden]. */
+/* Without this, a class like .auth-view { display: grid } wins over [hidden]. */
 [hidden] {
   display: none !important;
 }
@@ -148,7 +148,6 @@ textarea {
   text-align: center;
 }
 
-/* Auth */
 .auth-view {
   min-height: 100vh;
   display: grid;
@@ -191,7 +190,6 @@ textarea {
   color: #fff;
 }
 
-/* Layout */
 .topbar {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -227,7 +225,6 @@ textarea {
   padding-bottom: 48px;
 }
 
-/* Stats */
 .stats {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -255,7 +252,6 @@ textarea {
   font-weight: 700;
 }
 
-/* Toolbar */
 .toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -290,7 +286,6 @@ textarea {
   width: auto;
 }
 
-/* Table */
 .table-wrap {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -377,7 +372,6 @@ td.col-actions {
   color: var(--muted);
 }
 
-/* Dialog */
 .dialog {
   width: min(620px, calc(100vw - 32px));
   background: var(--surface);
@@ -404,7 +398,6 @@ td.col-actions {
   margin-top: 20px;
 }
 
-/* Toast */
 .toast {
   position: fixed;
   top: 16px;

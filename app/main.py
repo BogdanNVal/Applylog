@@ -1,5 +1,3 @@
-"""ApplyLog application entry point."""
-
 import os
 import secrets
 from contextlib import asynccontextmanager
@@ -26,7 +24,7 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     title="ApplyLog API",
-    description="Track job applications, statuses and response rates.",
+    description="Job applications you've logged, and how far they got.",
     version="1.0.0",
     lifespan=lifespan,
 )

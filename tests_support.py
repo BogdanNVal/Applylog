@@ -1,5 +1,3 @@
-"""Helpers shared by the API and browser test suites."""
-
 import time
 
 import psycopg
@@ -9,7 +7,7 @@ CONNECT_TIMEOUT = 30
 
 
 def _connect_when_ready(conninfo: str) -> psycopg.Connection:
-    """Retry until Postgres accepts connections (docker compose startup race)."""
+    # docker compose can still be starting when pytest kicks off.
     deadline = time.monotonic() + CONNECT_TIMEOUT
     while True:
         try:
@@ -21,7 +19,6 @@ def _connect_when_ready(conninfo: str) -> psycopg.Connection:
 
 
 def create_database_if_missing(dsn: str) -> None:
-    """Create the DSN database if missing (via the postgres maintenance DB)."""
     parts = conninfo_to_dict(dsn)
     name = parts.pop("dbname")
     with _connect_when_ready(make_conninfo(**parts, dbname="postgres")) as conn:
@@ -29,12 +26,11 @@ def create_database_if_missing(dsn: str) -> None:
             "SELECT 1 FROM pg_database WHERE datname = %s", (name,)
         ).fetchone()
         if not exists:
-            # Name is from our config, not user input.
+            # Name comes from our config, not a user.
             conn.execute(f'CREATE DATABASE "{name}"')
 
 
 def reset_database(dsn: str) -> None:
-    """Wipe schema so a run starts empty."""
     create_database_if_missing(dsn)
     with _connect_when_ready(dsn) as conn:
         conn.execute("DROP SCHEMA public CASCADE")

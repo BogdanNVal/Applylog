@@ -46,8 +46,6 @@ function toast(message, isError = false) {
   }, 2600);
 }
 
-/* Auth */
-
 function setAuthMode(mode) {
   state.authMode = mode;
   const isLogin = mode === "login";
@@ -106,8 +104,6 @@ async function logout() {
   showAuthView();
   toast("Signed out");
 }
-
-/* Dashboard */
 
 function filterParams() {
   const params = new URLSearchParams();
@@ -223,8 +219,6 @@ function renderRows(applications) {
   }
 }
 
-/* Form */
-
 function openDialog(item) {
   state.editingId = item ? item.id : null;
   $("dialog-title").textContent = item ? "Edit application" : "Add application";
@@ -293,8 +287,6 @@ async function removeApplication(item) {
     toast(err.message, true);
   }
 }
-
-/* Wiring */
 
 function debounce(fn, delay) {
   let timer;

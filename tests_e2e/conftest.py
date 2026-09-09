@@ -1,5 +1,3 @@
-"""Live server fixtures for browser tests."""
-
 import os
 import socket
 import subprocess
@@ -19,7 +17,7 @@ from tests_support import reset_database  # noqa: E402
 
 STARTUP_TIMEOUT = 30
 
-# Separate DB so e2e does not touch API test data.
+# Own database so these tests don't wipe the API suite's data.
 E2E_DSN = os.getenv(
     "APPLYLOG_E2E_DATABASE_URL",
     "postgresql://applylog:devpass@127.0.0.1:5433/applylog_e2e",
@@ -51,7 +49,7 @@ def live_server():
     reset_database(E2E_DSN)
 
     port = _free_port()
-    # Server migrates on startup; empty DB is enough.
+    # Empty DB is fine — the app migrates on startup.
     env = {**os.environ, "APPLYLOG_DATABASE_URL": E2E_DSN}
     process = subprocess.Popen(
         [
@@ -82,13 +80,11 @@ def live_server():
 
 @pytest.fixture(scope="session")
 def base_url(live_server):
-    """Base URL for page.goto("/")."""
     return live_server
 
 
 @pytest.fixture()
 def signed_in_page(page, base_url):
-    """Page with a fresh account."""
     page.goto("/")
     page.get_by_role("tab", name="Create account").click()
     page.get_by_label("Email").fill(f"e2e-{uuid4().hex[:12]}@example.com")

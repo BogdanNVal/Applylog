@@ -1,5 +1,3 @@
-"""PBKDF2 password hashing."""
-
 import base64
 import hashlib
 import hmac
