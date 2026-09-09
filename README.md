@@ -9,7 +9,7 @@ GitHub Actions.
 
 ## Live demo
 
-**[https://applylog-v0lm.onrender.com/](https://applylog-v0lm.onrender.com/)**
+**[[https://applylog-v0lm.onrender.com/](https://applylog-v0lm.onrender.com/)](https://applylog-or59.onrender.com/)**
 
 It's on Render's free tier, so the first hit after idle can take 30–60 seconds while
 the app wakes up. The database is Neon; that part comes back almost immediately.
